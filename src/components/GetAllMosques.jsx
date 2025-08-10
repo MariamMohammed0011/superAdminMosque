@@ -16,7 +16,7 @@ export default function GetAllMosques() {
   const [isSaved, setIsSaved] = useState(false);
 
   const [mosques, setMosques] = useState([]);
-  // const [error, setError] = useState("");
+  
   const [mosqueName, setMosqueName] = useState("");
   const [mosqueAddress, setMosqueAddress] = useState("");
    const [mosqueCode, setMosqueCode] = useState("");
@@ -27,9 +27,7 @@ const [editMosque, setEditMosque] = useState({
   id: '',
   name: '',
   address: '',
-  // teacherName: '',
-  // phone: '',
-  // students: ''
+ 
 });
 const [searchTerm, setSearchTerm] = useState("");
 
@@ -126,7 +124,7 @@ const getSortedMosques = () => {
       setNewMosqueCode(data.code_display);
       setMosqueName("");
       setMosqueAddress("");
-      fetchMosques(); // استدعاء لجلب كل الجوامع بعد الإضافة
+      fetchMosques(); 
     } catch (err) {
       setAddError("حدث خطأ أثناء الإضافة");
       console.error(err);
@@ -161,14 +159,8 @@ const getSortedMosques = () => {
 
     const updatedMosque = await response.json();
 
-// تحديث قائمة المساجد في الواجهة
-// setMosques((prevMosques) =>
-//   prevMosques.map((mosque) =>
-//     mosque.id === updatedMosque.id ? updatedMosque : mosque
-//   )
-// );
  fetchMosques();
-    setEditModal(false); // إخفاء مودال التعديل بعد النجاح
+    setEditModal(false); 
   } catch (err) {
     console.error(err);
   }
@@ -192,7 +184,7 @@ const handleDeleteMosque = async (id) => {
       throw new Error(errorRes.message || "فشل في الحذف");
     }
 
-    // إعادة جلب البيانات بعد الحذف
+    
     fetchMosques();
   } catch (err) {
     console.error(err);
@@ -203,7 +195,7 @@ const handleDeleteMosque = async (id) => {
 
   return (
     <div className="shadow-2xl min-h-screen flex-row-reverse flex font-ruqaa bg-[#FBFAF8] ">
-      {/* Sidebar */}
+     
       <aside className="shadow-2xl   rounded-2xl overflow-hidden  mb-4  w-64 min-h-screen bg-[#EBF3EC]   flex flex-col  text-[#2A603F]  hidden md:flex ">
         <div className="  ">
           <img
@@ -220,7 +212,7 @@ const handleDeleteMosque = async (id) => {
     <span>تصفح كل الجوامع</span> <FaRegListAlt size={23} />
   </button>
   <button
-    onClick={() => setAddModal(true)}
+     onClick={() => navigate('/registerAdmin')}
     className="flex items-center gap-3 justify-end "
   >
     <span>انشاء حساب جامع</span> <IoMdAddCircleOutline size={23} />
@@ -235,9 +227,9 @@ const handleDeleteMosque = async (id) => {
 
       </aside>
 
-      {/* Main Content */}
+    
       <main className="shadow-2xl flex-1 p-6 flex flex-col gap-6 w-full">
-        {/* Header */}
+       
         <div className="flex justify-between items-center flex-row-reverse">
           <div>
             <h2 className="text-2xl font-bold text-right">
@@ -289,8 +281,8 @@ const handleDeleteMosque = async (id) => {
         <button
           className="w-full bg-[#2A603F] text-white py-2 rounded hover:bg-[#245138]"
           onClick={() => {
-            // alert(`صنف حسب ${sortField} بترتيب ${sortOrder}`);
-            setShowSortMenu(false); // إغلاق القائمة بعد التطبيق
+         
+            setShowSortMenu(false); 
           }}
         >
           تطبيق
@@ -312,16 +304,11 @@ const handleDeleteMosque = async (id) => {
                 size={18}
               />
             </div>
-           {/* <button
-              onClick={() => setShowSidebar(!showSidebar)}
-              className="md:hidden border rounded px-2 py-1 shadow"
-            >
-              <Menu />
-            </button> */}
+         
           </div>
         </div>
 
-        {/* Table */}
+        
         <div className="bg-[#D6E6DB] rounded-xl p-4 shadow flex-1 overflow-x-auto">
           <div className="flex justify-end  items-end mb-6 flex-col text-right gap-3 md:flex-row xl:flex-col">
             <h3 className="text-xl font-bold text-[#2A603F] text-right">
@@ -343,23 +330,23 @@ const handleDeleteMosque = async (id) => {
             </button>
           </div>
 
-          {/* Table Header */}
+        
           <div className="hidden md:grid grid-cols-7 bg-[#D6E6DB] text-[#2A603F] font-bold p-2 rounded-lg text-center">
             <span>الإجراءات</span>
             <span>الطلاب</span>
             <span>الملف الشخصي</span>
-            <span>رقم الهاتف</span>
-            <span>اسم المعلم</span>
+            <span>رقم الكود</span>
+            <span> العنوان</span>
             <span>اسم الجامع</span>
             <span></span>
           </div>
 
-          {/* Table Rows */}
+         
           <div className="space-y-2 mt-2">
            {getSortedMosques().map((mosque) => (
   <div key={mosque.id}>
 
-                {/* Desktop View */}
+               
                 <div className="hidden md:grid grid-cols-7 bg-white p-2 rounded-lg text-center shadow hover:bg-gray-100 transition">
                   <div className="flex justify-center relative">
                     <button
@@ -401,7 +388,7 @@ const handleDeleteMosque = async (id) => {
                       </div>
                     )}
                   </div>
-                  <span >{mosque.students} </span>
+                  <span >{mosque.studentNumber} </span>
                   <div className="flex flex-col items-center gap-1 w-24 text-center break-words">
                    <button    onClick={() => navigate('/profile')}>  <LuFileText className="text-[#2A603F]" size={20} />
                     <span className="text-xs" >الملف الشخصي</span>
@@ -415,10 +402,9 @@ const handleDeleteMosque = async (id) => {
                   </span>
                 </div>
 
-                {/* Mobile View */}
-              {/* Mobile View */}
+            
 <div className="md:hidden bg-white p-2 rounded-lg shadow hover:bg-gray-100 transition space-y-2 relative text-sm w-72 mx-auto">
-  {/* العنوان مع القائمة */}
+  
   <div className="flex flex-col  mb-2">
    
     <div className="relative   flex justify-end mb-5 ">
@@ -474,7 +460,7 @@ const handleDeleteMosque = async (id) => {
 
   
 
-  {/* الأزرار التفاعلية */}
+  
   <div className="flex justify-between items-center mt-2">
     <button
       onClick={() => navigate('/profile')}
@@ -500,7 +486,7 @@ const handleDeleteMosque = async (id) => {
             <button
               onClick={() => {
                 setAddModal(false);
-                setIsSaved(false); // إعادة تعيين حالة الحفظ عند الإغلاق
+                setIsSaved(false); 
               }}
               className="absolute left-2 top-2 text-gray-500 hover:text-gray-700"
             >

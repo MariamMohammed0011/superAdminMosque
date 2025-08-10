@@ -1,17 +1,17 @@
 import React, { useState } from "react";
 import ContactSupervisor from "./ContactSupervisor";
-import { IoMdClose } from "react-icons/io";  // استيراد ايقونة الخروج
+import { IoMdClose } from "react-icons/io";  
 import watssapp from '../../public/animations/whatsapp.json'
 import Lottie from "lottie-react";
 import { IoReturnUpBackOutline } from "react-icons/io5";
-import { useNavigate } from "react-router-dom";   // استيراد useNavigate
+import { useNavigate } from "react-router-dom";   
 
 
 export default function ProfileMosque() {
   const [contactWatsapp, setContactWatssapp] = useState(false);
-  const [showProfile, setShowProfile] = useState(true);  // للتحكم في إظهار البطاقة
- const navigate = useNavigate();   // تعريف النفيجيت
-  if (!showProfile) return null;  // إذا تم الضغط على زر الإغلاق، لا يعرض شيء
+  const [showProfile, setShowProfile] = useState(true);  
+ const navigate = useNavigate();  
+  if (!showProfile) return null;  
 
   return (
     <section className="min-h-screen flex items-center justify-center bg-gradient-to-r from-[#AFD1BC] via-[#8FB8A4] to-[#E8F0EF] p-4 font-ruqaa">
@@ -24,7 +24,7 @@ export default function ProfileMosque() {
           <IoReturnUpBackOutline size={30} className="font-bold" />
         </button>
 <div className="flex flex-col items-center gap-3">
-  {/* صورة الجامع */}
+  
   <div className="flex-shrink-0">
     <img
       src="../../public/koraan.png"
@@ -33,10 +33,10 @@ export default function ProfileMosque() {
     />
   </div>
 
-  {/* اسم الجامع */}
+  
   <h2 className="text-2xl font-bold text-[#2A603F] text-center mb-7">جامع النور</h2>
 
-  {/* التفاصيل */}
+ 
   <div className=" rounded-lg p-3 text-center space-y-2 w-full">
     <div className="flex justify-around px-2 flex-row-reverse mb-5">
       <span className="font-bold text-[#2A603F]">:  المشرف</span>

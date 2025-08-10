@@ -15,11 +15,11 @@ export default function LoginSuperAdmin() {
     if (!response.ok) throw new Error('خطأ في تسجيل الدخول');
 
     const data = await response.json();
-    localStorage.setItem('token', data.token);  // احفظ التوكن هنا
+    localStorage.setItem('token', data.token); 
     console.log('تم تسجيل الدخول بنجاح:', data.token);
 
-    // إعادة توجيه إلى صفحة الجوامع
-    window.location.href = '/mosques';  // أو أي مسار صفحة الجوامع عندك
+    
+    window.location.href = '/mosques';  
 
   } catch (err) {
     setError('فشل تسجيل الدخول، يرجى التأكد من البيانات');
