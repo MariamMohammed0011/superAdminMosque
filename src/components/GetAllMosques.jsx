@@ -7,47 +7,45 @@ import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined
 import { LuFileText } from "react-icons/lu";
 import { IoCloseCircleOutline } from "react-icons/io5";
 import { IoMdLogOut } from "react-icons/io";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 export default function GetAllMosques() {
-  
   const [addModal, setAddModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
   const [showMenuIndex, setShowMenuIndex] = useState(null);
   const [isSaved, setIsSaved] = useState(false);
 
   const [mosques, setMosques] = useState([]);
-  
+
   const [mosqueName, setMosqueName] = useState("");
   const [mosqueAddress, setMosqueAddress] = useState("");
-   const [mosqueCode, setMosqueCode] = useState("");
-  
+  const [mosqueCode, setMosqueCode] = useState("");
+
   const [newMosqueCode, setNewMosqueCode] = useState("");
   const [addError, setAddError] = useState("");
-const [editMosque, setEditMosque] = useState({
-  id: '',
-  name: '',
-  address: '',
- 
-});
-const [searchTerm, setSearchTerm] = useState("");
+  const [editMosque, setEditMosque] = useState({
+    id: "",
+    name: "",
+    address: "",
+  });
+  const [searchTerm, setSearchTerm] = useState("");
 
-const filteredMosques = mosques.filter((mosque) =>
-  mosque.name.toLowerCase().includes(searchTerm.toLowerCase())
-);
-const [sortField, setSortField] = useState("");
+  const filteredMosques = mosques.filter((mosque) =>
+    mosque.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+  const [sortField, setSortField] = useState("");
   const [sortOrder, setSortOrder] = useState("asc");
-const [showSortMenu, setShowSortMenu] = useState(false);
- const navigate = useNavigate();
+  const [showSortMenu, setShowSortMenu] = useState(false);
+  const navigate = useNavigate();
   // const handleSave = () => {
   //   const codeToCopy = "1234-5678-9101"; // الكود المطلوب نسخه
   //   navigator.clipboard.writeText(codeToCopy).then(() => {
   //     setIsSaved(true);
   //   });
   // };
-const handleLogout = () => {
-  localStorage.removeItem("token");
-  window.location.href = "/login";
-};
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    window.location.href = "/login";
+  };
 
   const fetchMosques = async () => {
     try {
@@ -73,19 +71,19 @@ const handleLogout = () => {
       console.error(err);
     }
   };
-const getSortedMosques = () => {
-  let sorted = [...filteredMosques];
-  if (sortField) {
-    sorted.sort((a, b) => {
-      const aField = a[sortField]?.toLowerCase() || "";
-      const bField = b[sortField]?.toLowerCase() || "";
-      if (aField < bField) return sortOrder === "asc" ? -1 : 1;
-      if (aField > bField) return sortOrder === "asc" ? 1 : -1;
-      return 0;
-    });
-  }
-  return sorted;
-};
+  const getSortedMosques = () => {
+    let sorted = [...filteredMosques];
+    if (sortField) {
+      sorted.sort((a, b) => {
+        const aField = a[sortField]?.toLowerCase() || "";
+        const bField = b[sortField]?.toLowerCase() || "";
+        if (aField < bField) return sortOrder === "asc" ? -1 : 1;
+        if (aField > bField) return sortOrder === "asc" ? 1 : -1;
+        return 0;
+      });
+    }
+    return sorted;
+  };
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -112,90 +110,85 @@ const getSortedMosques = () => {
         body: JSON.stringify({
           name: mosqueName,
           address: mosqueAddress,
-       
         }),
       });
 
       if (!response.ok) throw new Error("فشل في إنشاء الجامع");
 
-     const data = await response.json();
+      const data = await response.json();
 
       setIsSaved(true);
       setNewMosqueCode(data.code_display);
       setMosqueName("");
       setMosqueAddress("");
-      fetchMosques(); 
+      fetchMosques();
     } catch (err) {
       setAddError("حدث خطأ أثناء الإضافة");
       console.error(err);
     }
   };
- const handleUpdateMosque = async () => {
-  try {
-    const token = localStorage.getItem("token");
-    if (!token) throw new Error("Token not found");
+  const handleUpdateMosque = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) throw new Error("Token not found");
 
-    const updateData = {
-      name: editMosque.name,
-      address: editMosque.address,
-      teacherName: editMosque.teacherName,
-      phone: editMosque.phone,
-      students: editMosque.students,
-    };
+      const updateData = {
+        name: editMosque.name,
+        address: editMosque.address,
+        teacherName: editMosque.teacherName,
+        phone: editMosque.phone,
+        students: editMosque.students,
+      };
 
-    const response = await fetch(`/api/mosque/update/${editMosque.id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(updateData),
-    });
+      const response = await fetch(`/api/mosque/update/${editMosque.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(updateData),
+      });
 
-    if (!response.ok) {
-      const errorRes = await response.json();
-      throw new Error(errorRes.message || "فشل في التعديل");
+      if (!response.ok) {
+        const errorRes = await response.json();
+        throw new Error(errorRes.message || "فشل في التعديل");
+      }
+
+      const updatedMosque = await response.json();
+
+      fetchMosques();
+      setEditModal(false);
+    } catch (err) {
+      console.error(err);
     }
+  };
 
-    const updatedMosque = await response.json();
+  const handleDeleteMosque = async (id) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) throw new Error("غير مصرح لك");
 
- fetchMosques();
-    setEditModal(false); 
-  } catch (err) {
-    console.error(err);
-  }
-};
+      const response = await fetch(`/api/mosque/delete/${id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
+      if (!response.ok) {
+        const errorRes = await response.json();
+        throw new Error(errorRes.message || "فشل في الحذف");
+      }
 
-const handleDeleteMosque = async (id) => {
-  try {
-    const token = localStorage.getItem("token");
-    if (!token) throw new Error("غير مصرح لك");
-
-    const response = await fetch(`/api/mosque/delete/${id}`, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    if (!response.ok) {
-      const errorRes = await response.json();
-      throw new Error(errorRes.message || "فشل في الحذف");
+      fetchMosques();
+    } catch (err) {
+      console.error(err);
+      alert(err.message);
     }
-
-    
-    fetchMosques();
-  } catch (err) {
-    console.error(err);
-    alert(err.message);
-  }
-};
-
+  };
 
   return (
     <div className="shadow-2xl min-h-screen flex-row-reverse flex font-ruqaa bg-[#FBFAF8] ">
-     
       <aside className="shadow-2xl   rounded-2xl overflow-hidden  mb-4  w-64 min-h-screen bg-[#EBF3EC]   flex flex-col  text-[#2A603F]  hidden md:flex ">
         <div className="  ">
           <img
@@ -204,32 +197,29 @@ const handleDeleteMosque = async (id) => {
             className=" translate-y-[-50px] object-cover xl:rounded-tr-2xl xl:rounded-br-2xl "
           />
         </div>
-     <nav className="flex flex-col gap-7 text-xl text-right mt-[-90px] pr-8 font-ruqaa">
-  <button
-    onClick={() => fetchMosques()}
-    className="flex items-center gap-3 justify-end "
-  >
-    <span>تصفح كل الجوامع</span> <FaRegListAlt size={23} />
-  </button>
-  <button
-     onClick={() => navigate('/registerAdmin')}
-    className="flex items-center gap-3 justify-end "
-  >
-    <span>انشاء حساب جامع</span> <IoMdAddCircleOutline size={23} />
-  </button>
-  <button
-    onClick={handleLogout}
-    className="flex items-center gap-3 justify-end "
-  >
-    <span>تسجيل خروج</span> <IoMdLogOut size={23} />
-  </button>
-</nav>
-
+        <nav className="flex flex-col gap-7 text-xl text-right mt-[-90px] pr-8 font-ruqaa">
+          <button
+            onClick={() => fetchMosques()}
+            className="flex items-center gap-3 justify-end "
+          >
+            <span>تصفح كل الجوامع</span> <FaRegListAlt size={23} />
+          </button>
+          <button
+            onClick={() => navigate("/registerAdmin")}
+            className="flex items-center gap-3 justify-end "
+          >
+            <span>انشاء حساب جامع</span> <IoMdAddCircleOutline size={23} />
+          </button>
+          <button
+            onClick={handleLogout}
+            className="flex items-center gap-3 justify-end "
+          >
+            <span>تسجيل خروج</span> <IoMdLogOut size={23} />
+          </button>
+        </nav>
       </aside>
 
-    
       <main className="shadow-2xl flex-1 p-6 flex flex-col gap-6 w-full">
-       
         <div className="flex justify-between items-center flex-row-reverse">
           <div>
             <h2 className="text-2xl font-bold text-right">
@@ -237,78 +227,81 @@ const handleDeleteMosque = async (id) => {
             </h2>
           </div>
           <div className="flex gap-2 md:gap-4 flex-col md:flex-row">
-            <button className="flex items-center gap-1 border px-3 py-1 rounded-lg shadow"  onClick={() => setShowSortMenu(!showSortMenu)}>
+            <button
+              className="flex items-center gap-1 border px-3 py-1 rounded-lg shadow"
+              onClick={() => setShowSortMenu(!showSortMenu)}
+            >
               <Menu size={18} />
               <span>تصنيف حسب</span>
             </button>
-              {showSortMenu && (
-      <div className="absolute mt-10  w-48 bg-white border rounded shadow-lg p-4 space-y-5 z-20">
-       
-       <button
-               onClick={() => setShowSortMenu(false)}
-              className="absolute left-2 top-2 text-gray-500 hover:text-gray-700"
-            >
-              <IoCloseCircleOutline size={30} />
-            </button>
-       
-        <div>
-          <label className="flex flex-row-reverse mb-2 font-medium">المجال</label>
-          <select
-            value={sortField}
-            onChange={(e) => setSortField(e.target.value)}
-            className="w-full border rounded p-1 text-right"
-          >
-            <option value="">اختر المجال</option>
-            <option value="name">اسم الجامع</option>
-            <option value="teacherName">اسم المعلم</option>
-            <option value="phone">رقم الهاتف</option>
-            <option value="students">عدد الطلاب</option>
-          </select>
-        </div>
+            {showSortMenu && (
+              <div className="absolute mt-10  w-48 bg-white border rounded shadow-lg p-4 space-y-5 z-20">
+                <button
+                  onClick={() => setShowSortMenu(false)}
+                  className="absolute left-2 top-2 text-gray-500 hover:text-gray-700"
+                >
+                  <IoCloseCircleOutline size={30} />
+                </button>
 
-        <div>
-          <label className=" mb-1 font-medium  flex flex-row-reverse">الترتيب</label>
-          <select
-            value={sortOrder}
-            onChange={(e) => setSortOrder(e.target.value)}
-            className="w-full border rounded p-1 text-right"
-          >
-            <option value="asc">تصاعدي</option>
-            <option value="desc">تنازلي</option>
-          </select>
-        </div>
+                <div>
+                  <label className="flex flex-row-reverse mb-2 font-medium">
+                    المجال
+                  </label>
+                  <select
+                    value={sortField}
+                    onChange={(e) => setSortField(e.target.value)}
+                    className="w-full border rounded p-1 text-right"
+                  >
+                    <option value="">اختر المجال</option>
+                    <option value="name">اسم الجامع</option>
+                    <option value="teacherName">اسم المعلم</option>
+                    <option value="phone">رقم الهاتف</option>
+                    <option value="students">عدد الطلاب</option>
+                  </select>
+                </div>
 
-        <button
-          className="w-full bg-[#2A603F] text-white py-2 rounded hover:bg-[#245138]"
-          onClick={() => {
-         
-            setShowSortMenu(false); 
-          }}
-        >
-          تطبيق
-        </button>
-      </div>
-    )}
-           
+                <div>
+                  <label className=" mb-1 font-medium  flex flex-row-reverse">
+                    الترتيب
+                  </label>
+                  <select
+                    value={sortOrder}
+                    onChange={(e) => setSortOrder(e.target.value)}
+                    className="w-full border rounded p-1 text-right"
+                  >
+                    <option value="asc">تصاعدي</option>
+                    <option value="desc">تنازلي</option>
+                  </select>
+                </div>
+
+                <button
+                  className="w-full bg-[#2A603F] text-white py-2 rounded hover:bg-[#245138]"
+                  onClick={() => {
+                    setShowSortMenu(false);
+                  }}
+                >
+                  تطبيق
+                </button>
+              </div>
+            )}
+
             <div className="relative">
-             <input
-  type="text"
-  placeholder="بحث"
-  value={searchTerm}
-  onChange={(e) => setSearchTerm(e.target.value)}
-  className="border rounded-full pl-10 pr-4 py-1 shadow focus:outline-[#AFD1BC]"
-/>
+              <input
+                type="text"
+                placeholder="بحث"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="border rounded-full pl-10 pr-4 py-1 shadow focus:outline-[#AFD1BC]"
+              />
 
               <Search
                 className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
                 size={18}
               />
             </div>
-         
           </div>
         </div>
 
-        
         <div className="bg-[#D6E6DB] rounded-xl p-4 shadow flex-1 overflow-x-auto">
           <div className="flex justify-end  items-end mb-6 flex-col text-right gap-3 md:flex-row xl:flex-col">
             <h3 className="text-xl font-bold text-[#2A603F] text-right">
@@ -330,9 +323,9 @@ const handleDeleteMosque = async (id) => {
             </button>
           </div>
 
-        
-          <div className="hidden md:grid grid-cols-7 bg-[#D6E6DB] text-[#2A603F] font-bold p-2 rounded-lg text-center">
+          <div className="hidden md:grid grid-cols-8 bg-[#D6E6DB] text-[#2A603F] font-bold p-2 rounded-lg text-center">
             <span>الإجراءات</span>
+            <span>المعلمين</span>
             <span>الطلاب</span>
             <span>الملف الشخصي</span>
             <span>رقم الكود</span>
@@ -341,17 +334,16 @@ const handleDeleteMosque = async (id) => {
             <span></span>
           </div>
 
-         
           <div className="space-y-2 mt-2">
-           {getSortedMosques().map((mosque) => (
-  <div key={mosque.id}>
-
-               
-                <div className="hidden md:grid grid-cols-7 bg-white p-2 rounded-lg text-center shadow hover:bg-gray-100 transition">
+            {getSortedMosques().map((mosque) => (
+              <div key={mosque.id}>
+                <div className="hidden md:grid grid-cols-8 bg-white p-2 rounded-lg text-center shadow hover:bg-gray-100 transition">
                   <div className="flex justify-center relative">
                     <button
                       onClick={() =>
-                        setShowMenuIndex(mosque.id === showMenuIndex ? null : mosque.id)
+                        setShowMenuIndex(
+                          mosque.id === showMenuIndex ? null : mosque.id
+                        )
                       }
                     >
                       <MoreVertical />
@@ -363,14 +355,14 @@ const handleDeleteMosque = async (id) => {
                           onClick={() => {
                             setShowMenuIndex(null);
                             setEditMosque({
-    id: mosque.id,
-    name: mosque.name,
-    address: mosque.address,
-   
-    // teacherName: mosque.teacherName || "",
-    // phone: mosque.phone || "",
-    // students: mosque.students || 0,
-  });
+                              id: mosque.id,
+                              name: mosque.name,
+                              address: mosque.address,
+
+                              // teacherName: mosque.teacherName || "",
+                              // phone: mosque.phone || "",
+                              // students: mosque.students || 0,
+                            });
                             setEditModal(true);
                           }}
                         >
@@ -379,102 +371,113 @@ const handleDeleteMosque = async (id) => {
                         <button
                           className="block text-[#000] hover:bg-gray-100 font-ruqaa"
                           onClick={() => {
-    setShowMenuIndex(null);
-    handleDeleteMosque(mosque.id);
-  }}
+                            setShowMenuIndex(null);
+                            handleDeleteMosque(mosque.id);
+                          }}
                         >
                           حذف
                         </button>
                       </div>
                     )}
                   </div>
-                  <span >{mosque.studentNumber} </span>
+                  <span>{mosque.teacherNumber} </span>
+                  <span>{mosque.studentNumber} </span>
                   <div className="flex flex-col items-center gap-1 w-24 text-center break-words">
-                   <button    onClick={() => navigate('/profile')}>  <LuFileText className="text-[#2A603F]" size={20} />
-                    <span className="text-xs" >الملف الشخصي</span>
-                </button>
-                     </div>
+                    <button onClick={() => navigate(`/profile/${mosque.id}`)}>
+                      <LuFileText
+                        className="text-[#2A603F] mx-auto"
+                        size={20}
+                      />
+                      <span className="text-xs">الملف الشخصي</span>
+                    </button>
+                  </div>
                   <span>{mosque.code} </span>
-                  <span className="text-xs break-words " >{mosque.address} </span>
+                  <span className="text-xs break-words ">
+                    {mosque.address}{" "}
+                  </span>
                   <span className="text-xs break-words ">{mosque.name} </span>
                   <span>
                     <AccountCircleOutlinedIcon className="text-[#F8C248]" />
                   </span>
                 </div>
 
-            
-<div className="md:hidden bg-white p-2 rounded-lg shadow hover:bg-gray-100 transition space-y-2 relative text-sm w-72 mx-auto">
-  
-  <div className="flex flex-col  mb-2">
-   
-    <div className="relative   flex justify-end mb-5 ">
-      <button
-        onClick={() =>
-          setShowMenuIndex(mosque.id === showMenuIndex ? null : mosque.id)
-        }
-      >
-        <MoreVertical size={18} />
-      </button>
+                <div className="md:hidden bg-white p-2 rounded-lg shadow hover:bg-gray-100 transition space-y-2 relative text-sm w-72 mx-auto">
+                  <div className="flex flex-col  mb-2">
+                    <div className="relative   flex justify-end mb-5 ">
+                      <button
+                        onClick={() =>
+                          setShowMenuIndex(
+                            mosque.id === showMenuIndex ? null : mosque.id
+                          )
+                        }
+                      >
+                        <MoreVertical size={18} />
+                      </button>
 
-      {showMenuIndex === mosque.id && (
-        <div className="absolute left-0 top-7 bg-white border rounded shadow z-10 w-24 text-center flex flex-col">
-          <button
-            className="hover:bg-gray-100 p-1 text-xs"
-            onClick={() => {
-              setShowMenuIndex(null);
-              setEditMosque({
-                id: mosque.id,
-                name: mosque.name,
-                address: mosque.address,
-              });
-              setEditModal(true);
-            }}
-          >
-            تعديل
-          </button>
-          <button
-            className="hover:bg-gray-100 p-1 text-xs"
-            onClick={() => {
-              setShowMenuIndex(null);
-              handleDeleteMosque(mosque.id);
-            }}
-          >
-            حذف
-          </button>
-        </div>
-      )}
-    </div>
-  <div className="flex flex-col justify-between text-justify space-y-4">
-  <div className="flex flex-col space-y-1">
-    <span className="text-[#2A603F] font-bold truncate text-right">: اسم الجامع</span>
-    <span className="text-[#2A603F] font-bold truncate text-center">{mosque.name}</span>
-  </div>
+                      {showMenuIndex === mosque.id && (
+                        <div className="absolute left-0 top-7 bg-white border rounded shadow z-10 w-24 text-center flex flex-col">
+                          <button
+                            className="hover:bg-gray-100 p-1 text-xs"
+                            onClick={() => {
+                              setShowMenuIndex(null);
+                              setEditMosque({
+                                id: mosque.id,
+                                name: mosque.name,
+                                address: mosque.address,
+                              });
+                              setEditModal(true);
+                            }}
+                          >
+                            تعديل
+                          </button>
+                          <button
+                            className="hover:bg-gray-100 p-1 text-xs"
+                            onClick={() => {
+                              setShowMenuIndex(null);
+                              handleDeleteMosque(mosque.id);
+                            }}
+                          >
+                            حذف
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex flex-col justify-between text-justify space-y-4">
+                      <div className="flex flex-col space-y-1">
+                        <span className="text-[#2A603F] font-bold truncate text-right">
+                          : اسم الجامع
+                        </span>
+                        <span className="text-[#2A603F] font-bold truncate text-center">
+                          {mosque.name}
+                        </span>
+                      </div>
 
-  <div className="flex flex-col space-y-1">
-    <span className="text-[#2A603F] font-bold truncate text-right">: عنوان الجامع</span>
-    <span className="text-[#2A603F] font-bold truncate text-center">{mosque.address}</span>
-  </div>
-</div>
+                      <div className="flex flex-col space-y-1">
+                        <span className="text-[#2A603F] font-bold truncate text-right">
+                          : عنوان الجامع
+                        </span>
+                        <span className="text-[#2A603F] font-bold truncate text-center">
+                          {mosque.address}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
 
-  </div>
+                  <div className="flex justify-between items-center mt-2">
+                    <button
+                      onClick={() => navigate("/profile")}
+                      className="flex items-center gap-1 text-[#2A603F] hover:text-green-700 transition text-xs"
+                    >
+                      <LuFileText size={16} />
+                      <span>الملف الشخصي</span>
+                    </button>
 
-  
-
-  
-  <div className="flex justify-between items-center mt-2">
-    <button
-      onClick={() => navigate('/profile')}
-      className="flex items-center gap-1 text-[#2A603F] hover:text-green-700 transition text-xs"
-    >
-      <LuFileText size={16} />
-      <span>الملف الشخصي</span>
-    </button>
-
-    <AccountCircleOutlinedIcon className="text-[#F8C248]" fontSize="small" />
-  </div>
-</div>
-
-
+                    <AccountCircleOutlinedIcon
+                      className="text-[#F8C248]"
+                      fontSize="small"
+                    />
+                  </div>
+                </div>
               </div>
             ))}
           </div>
@@ -486,7 +489,7 @@ const handleDeleteMosque = async (id) => {
             <button
               onClick={() => {
                 setAddModal(false);
-                setIsSaved(false); 
+                setIsSaved(false);
               }}
               className="absolute left-2 top-2 text-gray-500 hover:text-gray-700"
             >
@@ -500,7 +503,7 @@ const handleDeleteMosque = async (id) => {
                   تم نسخ الكود بنجاح إلى الحافظة:
                 </p>
                 <div className="bg-gray-100 p-2 rounded text-center font-mono text-lg">
-               {newMosqueCode}
+                  {newMosqueCode}
                 </div>
                 <button
                   onClick={() => {
@@ -616,8 +619,6 @@ const handleDeleteMosque = async (id) => {
           </div>
         </div>
       )}
-    
-
     </div>
   );
 }

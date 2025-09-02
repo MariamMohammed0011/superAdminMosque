@@ -1,37 +1,48 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-export default function ContactSupervisor() {
-   const [phone, setPhone] = useState('');
+export default function ContactSupervisor({ phone }) {
   const [message, setMessage] = useState('');
-const handleSend = () => {
-    if (!phone || !message) {
-      alert('الرجاء إدخال الرقم والرسالة');
+  const [cleanedPhone, setCleanedPhone] = useState('');
+
+  useEffect(() => {
+    if (phone) {
+     
+      let digits = phone.replace(/[^0-9]/g, '');
+
+     
+      if (digits.startsWith('0')) {
+        digits = digits.substring(1); 
+        digits = '963' + digits;
+      }
+     
+      else if (digits.startsWith('9') && digits.length === 9) {
+        digits = '963' + digits;
+      }
+    
+
+      setCleanedPhone(digits);
+    }
+  }, [phone]);
+
+  const handleSend = () => {
+    if (!cleanedPhone || !message) {
+      alert('الرجاء كتابة الرسالة');
       return;
     }
 
-    
-    const cleanedPhone = phone.replace(/[^0-9]/g, '');
-
-   
     const encodedMessage = encodeURIComponent(message);
-
-   
     const url = `https://wa.me/${cleanedPhone}?text=${encodedMessage}`;
-
-   
     window.open(url, '_blank');
   };
 
   return (
     <div className="p-4 space-y-3 max-w-sm mx-auto">
-      <h2 className="text-xl font-bold text-center">  ارسل رسالتك عبر تطبيق الواتساب </h2>
-      <input
-        type="text"
-        placeholder="أدخل رقم الهاتف "
-        value={phone}
-        onChange={(e) => setPhone(e.target.value)}
-        className="border p-2 w-full rounded text-right"
-      />
+      <h2 className="text-xl font-bold text-center">ارسل رسالتك عبر تطبيق الواتساب</h2>
+
+      <div className="border p-2 w-full rounded text-right bg-gray-100">
+        رقم الهاتف: {cleanedPhone ? `+${cleanedPhone}` : 'غير متوفر'}
+      </div>
+
       <textarea
         placeholder="اكتب الرسالة هنا"
         value={message}

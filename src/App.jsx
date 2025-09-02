@@ -11,6 +11,8 @@ function App() {
         <Route path="/login" element={<LoginSuperAdmin />} />
         <Route path="/mosques" element={<GetAllMosques />} />
         <Route path="/profile" element={<ProfileMosque />} />
+        <Route path="/profile/:mosqueId" element={<ProfileMosque />} />
+
          <Route path="/registerAdmin" element={<RegisterAdmin />} />
         <Route path="*" element={<LoginSuperAdmin />} />
       </Routes>
