@@ -8,6 +8,7 @@ export default {
     extend: {
       fontFamily: {
         ruqaa: ['"Aref Ruqaa"', 'serif'],
+        zain: ["'Zain'", "sans-serif"],
       },
     },
   },

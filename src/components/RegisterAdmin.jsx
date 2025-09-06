@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom"; // مهم
+import { useNavigate } from "react-router-dom";
 import { IoReturnUpBackOutline } from "react-icons/io5";
 export default function RegisterAdmin() {
-  const navigate = useNavigate(); // لإنشاء التنقل
+  const navigate = useNavigate();
   const [mosques, setMosques] = useState([]);
   const [formData, setFormData] = useState({
     email: "",
@@ -13,10 +13,9 @@ export default function RegisterAdmin() {
     birth_date: "",
     is_save_quran: false,
     phone: "",
-    father_phone: "",
-    address: "",
-    certificates: "",
     experiences: "",
+    address: "",
+
     memorized_parts: 0,
   });
 
@@ -79,10 +78,9 @@ export default function RegisterAdmin() {
         birth_date: "",
         is_save_quran: false,
         phone: "",
-        father_phone: "",
-        address: "",
-        certificates: "",
         experiences: "",
+        address: "",
+
         memorized_parts: 0,
       });
     } catch (err) {
@@ -94,10 +92,8 @@ export default function RegisterAdmin() {
   return (
     <section className="min-h-screen flex items-center justify-center font-mono bg-gradient-to-r from-[#AFD1BC] via-[#8FB8A4] to-[#E8F0EF]">
       <div className="flex shadow-2xl flex-col items-center">
-        
-        {/* زر الرجوع */}
         <button
-         onClick={() => navigate('/mosques')} 
+          onClick={() => navigate("/mosques")}
           className="absolute top-2 left-2  text-[#2A603F]  text-2xl"
         >
           <IoReturnUpBackOutline size={30} className="font-bold" />
@@ -110,14 +106,44 @@ export default function RegisterAdmin() {
             </h1>
 
             <form onSubmit={handleSubmit} className="w-full space-y-4">
-              <InputField label="الاسم الأول" name="first_name" value={formData.first_name} onChange={handleChange} />
-              <InputField label="الاسم الأخير" name="last_name" value={formData.last_name} onChange={handleChange} />
-              <InputField label="البريد الإلكتروني" name="email" value={formData.email} onChange={handleChange} />
-              <InputField label="كلمة المرور" name="password" type="password" value={formData.password} onChange={handleChange} />
-              <InputField label="تاريخ الميلاد" name="birth_date" type="date" value={formData.birth_date} onChange={handleChange} />
+              <InputField
+                label="الاسم الأول"
+                name="first_name"
+                value={formData.first_name}
+                onChange={handleChange}
+              />
+              <InputField
+                label="الاسم الأخير"
+                name="last_name"
+                value={formData.last_name}
+                onChange={handleChange}
+              />
+              <InputField
+                label="البريد الإلكتروني"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+              />
+              <InputField
+                label="كلمة المرور"
+                name="password"
+                type="password"
+                value={formData.password}
+                onChange={handleChange}
+              />
+              <InputField
+                label="تاريخ الميلاد"
+                name="birth_date"
+                type="date"
+                value={formData.birth_date}
+                onChange={handleChange}
+              />
 
               <div className="flex items-center justify-end gap-2 text-right">
-                <label htmlFor="is_save_quran" className="text-[#2A603F] font-ruqaa">
+                <label
+                  htmlFor="is_save_quran"
+                  className="text-[#2A603F] font-ruqaa"
+                >
                   يحفظ القرآن؟
                 </label>
                 <input
@@ -130,12 +156,33 @@ export default function RegisterAdmin() {
                 />
               </div>
 
-              <InputField label="رقم الهاتف" name="phone" value={formData.phone} onChange={handleChange} />
-              <InputField label="رقم هاتف الأب" name="father_phone" value={formData.father_phone} onChange={handleChange} />
-              <InputField label="العنوان" name="address" value={formData.address} onChange={handleChange} />
-              <InputField label="الشهادات" name="certificates" value={formData.certificates} onChange={handleChange} />
-              <InputField label="الخبرات" name="experiences" value={formData.experiences} onChange={handleChange} />
-              <InputField label="عدد الأجزاء المحفوظة" name="memorized_parts" type="number" value={formData.memorized_parts} onChange={handleChange} />
+              <InputField
+                label="رقم الهاتف"
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+              />
+
+              <InputField
+                label="العنوان"
+                name="address"
+                value={formData.address}
+                onChange={handleChange}
+              />
+              <InputField
+                label=" الخبرات"
+                name="experiences"
+                value={formData.experiences}
+                onChange={handleChange}
+              />
+
+              <InputField
+                label="عدد الأجزاء المحفوظة"
+                name="memorized_parts"
+                type="number"
+                value={formData.memorized_parts}
+                onChange={handleChange}
+              />
 
               <div className="flex flex-col text-right">
                 <label className="text-[#2A603F] font-ruqaa">اختر المسجد</label>
@@ -155,12 +202,17 @@ export default function RegisterAdmin() {
                 </select>
               </div>
 
-              <button type="submit" className="w-full px-6 py-2 text-xl rounded-md bg-gradient-to-r from-[#AFD1BC] via-[#8FB8A4] to-[#E8F0EF] text-white font-ruqaa hover:from-[#AFD1BC] hover:to-[#AFD1BC] ">
+              <button
+                type="submit"
+                className="w-full px-6 py-2 text-xl rounded-md bg-gradient-to-r from-[#AFD1BC] via-[#8FB8A4] to-[#E8F0EF] text-white font-ruqaa hover:from-[#AFD1BC] hover:to-[#AFD1BC] "
+              >
                 تسجيل الإدمن
               </button>
             </form>
 
-            {message && <div className="text-red-500 font-ruqaa">{message}</div>}
+            {message && (
+              <div className="text-red-500 font-ruqaa">{message}</div>
+            )}
           </div>
 
           <div className="w-[350px] h-[400px] overflow-hidden rounded-tr-2xl rounded-br-2xl hidden xl:block">

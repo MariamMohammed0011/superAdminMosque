@@ -36,12 +36,7 @@ export default function GetAllMosques() {
   const [sortOrder, setSortOrder] = useState("asc");
   const [showSortMenu, setShowSortMenu] = useState(false);
   const navigate = useNavigate();
-  // const handleSave = () => {
-  //   const codeToCopy = "1234-5678-9101"; // الكود المطلوب نسخه
-  //   navigator.clipboard.writeText(codeToCopy).then(() => {
-  //     setIsSaved(true);
-  //   });
-  // };
+
   const handleLogout = () => {
     localStorage.removeItem("token");
     window.location.href = "/login";
@@ -50,6 +45,7 @@ export default function GetAllMosques() {
   const fetchMosques = async () => {
     try {
       const token = localStorage.getItem("token");
+      console.log(token);
       if (!token) {
         setError("غير مصرح لك بالدخول");
         return;
@@ -75,8 +71,15 @@ export default function GetAllMosques() {
     let sorted = [...filteredMosques];
     if (sortField) {
       sorted.sort((a, b) => {
-        const aField = a[sortField]?.toLowerCase() || "";
-        const bField = b[sortField]?.toLowerCase() || "";
+        let aField = a[sortField] ?? "";
+        let bField = b[sortField] ?? "";
+
+        if (typeof aField === "number" && typeof bField === "number") {
+          return sortOrder === "asc" ? aField - bField : bField - aField;
+        }
+
+        aField = aField.toString().toLowerCase();
+        bField = bField.toString().toLowerCase();
         if (aField < bField) return sortOrder === "asc" ? -1 : 1;
         if (aField > bField) return sortOrder === "asc" ? 1 : -1;
         return 0;
@@ -84,6 +87,7 @@ export default function GetAllMosques() {
     }
     return sorted;
   };
+
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -135,9 +139,6 @@ export default function GetAllMosques() {
       const updateData = {
         name: editMosque.name,
         address: editMosque.address,
-        teacherName: editMosque.teacherName,
-        phone: editMosque.phone,
-        students: editMosque.students,
       };
 
       const response = await fetch(`/api/mosque/update/${editMosque.id}`, {
@@ -254,14 +255,14 @@ export default function GetAllMosques() {
                   >
                     <option value="">اختر المجال</option>
                     <option value="name">اسم الجامع</option>
-                    <option value="teacherName">اسم المعلم</option>
-                    <option value="phone">رقم الهاتف</option>
-                    <option value="students">عدد الطلاب</option>
+                    <option value="address">عنوان الجامع</option>
+                    <option value="studentNumber">عدد الطلاب</option>
+                    <option value="teacherNumber">عدد المعلمين</option>
                   </select>
                 </div>
 
                 <div>
-                  <label className=" mb-1 font-medium  flex flex-row-reverse">
+                  <label className="mb-1 font-medium flex flex-row-reverse">
                     الترتيب
                   </label>
                   <select
@@ -346,7 +347,7 @@ export default function GetAllMosques() {
                         )
                       }
                     >
-                      <MoreVertical />
+                      <MoreVertical className="text-[#2A603F]" />
                     </button>
                     {showMenuIndex === mosque.id && (
                       <div className="absolute right-full translate-x-[57px] translate-y-2 bg-white border rounded shadow z-10 w-20 text-center flex flex-col">
@@ -358,10 +359,6 @@ export default function GetAllMosques() {
                               id: mosque.id,
                               name: mosque.name,
                               address: mosque.address,
-
-                              // teacherName: mosque.teacherName || "",
-                              // phone: mosque.phone || "",
-                              // students: mosque.students || 0,
                             });
                             setEditModal(true);
                           }}
@@ -380,22 +377,32 @@ export default function GetAllMosques() {
                       </div>
                     )}
                   </div>
-                  <span>{mosque.teacherNumber} </span>
-                  <span>{mosque.studentNumber} </span>
+                  <span className="text-md text-[#2A603F]">
+                    {mosque.teacherNumber}{" "}
+                  </span>
+                  <span className="text-md text-[#2A603F]">
+                    {mosque.studentNumber}{" "}
+                  </span>
                   <div className="flex flex-col items-center gap-1 w-24 text-center break-words">
                     <button onClick={() => navigate(`/profile/${mosque.id}`)}>
                       <LuFileText
                         className="text-[#2A603F] mx-auto"
                         size={20}
                       />
-                      <span className="text-xs">الملف الشخصي</span>
+                      <span className="text-xs text-[#2A603F]">
+                        الملف الشخصي
+                      </span>
                     </button>
                   </div>
-                  <span>{mosque.code} </span>
-                  <span className="text-xs break-words ">
+                  <span className="text-md text-[#2A603F] ">
+                    {mosque.code}{" "}
+                  </span>
+                  <span className="text-md text-[#2A603F] break-words ">
                     {mosque.address}{" "}
                   </span>
-                  <span className="text-xs break-words ">{mosque.name} </span>
+                  <span className="text-md break-words text-[#2A603F] ">
+                    {mosque.name}{" "}
+                  </span>
                   <span>
                     <AccountCircleOutlinedIcon className="text-[#F8C248]" />
                   </span>
@@ -580,33 +587,6 @@ export default function GetAllMosques() {
                 setEditMosque({ ...editMosque, address: e.target.value })
               }
               placeholder="عنوان الجامع"
-              className="w-full border rounded p-2 text-right"
-            />
-            <input
-              type="text"
-              value={editMosque.teacherName}
-              onChange={(e) =>
-                setEditMosque({ ...editMosque, teacherName: e.target.value })
-              }
-              placeholder="اسم المعلم المسؤول"
-              className="w-full border rounded p-2 text-right"
-            />
-            <input
-              type="text"
-              value={editMosque.phone}
-              onChange={(e) =>
-                setEditMosque({ ...editMosque, phone: e.target.value })
-              }
-              placeholder="رقم الهاتف"
-              className="w-full border rounded p-2 text-right"
-            />
-            <input
-              type="number"
-              value={editMosque.students}
-              onChange={(e) =>
-                setEditMosque({ ...editMosque, students: e.target.value })
-              }
-              placeholder="عدد الطلاب"
               className="w-full border rounded p-2 text-right"
             />
 
