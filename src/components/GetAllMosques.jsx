@@ -29,9 +29,15 @@ export default function GetAllMosques() {
   });
   const [searchTerm, setSearchTerm] = useState("");
 
-  const filteredMosques = mosques.filter((mosque) =>
-    mosque.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // const filteredMosques = mosques.filter((mosque) =>
+  //   mosque.name.toLowerCase().includes(searchTerm.toLowerCase())
+  // );
+  const filteredMosques = Array.isArray(mosques)
+  ? mosques.filter((mosque) =>
+      mosque.name?.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+  : [];
+
   const [sortField, setSortField] = useState("");
   const [sortOrder, setSortOrder] = useState("asc");
   const [showSortMenu, setShowSortMenu] = useState(false);
@@ -87,7 +93,9 @@ export default function GetAllMosques() {
     }
     return sorted;
   };
-
+const fetchAdmins=()=>{
+navigate('/admins');
+}
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -204,6 +212,12 @@ export default function GetAllMosques() {
             className="flex items-center gap-3 justify-end "
           >
             <span>تصفح كل الجوامع</span> <FaRegListAlt size={23} />
+          </button>
+          <button
+            onClick={() => fetchAdmins()}
+            className="flex items-center gap-3 justify-end "
+          >
+            <span>تصفح كل المشرفين</span> <FaRegListAlt size={23} />
           </button>
           <button
             onClick={() => navigate("/registerAdmin")}
