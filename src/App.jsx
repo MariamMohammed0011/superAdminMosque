@@ -13,8 +13,8 @@ function App() {
         <Route path="/mosques" element={<GetAllMosques />} />
         <Route path="/profile" element={<ProfileMosque />} />
         <Route path="/profile/:mosqueId" element={<ProfileMosque />} />
-          <Route path="/admins" element={<GetAllAdmins />} />
-         <Route path="/registerAdmin" element={<RegisterAdmin />} />
+        <Route path="/admins" element={<GetAllAdmins />} />
+        <Route path="/registerAdmin" element={<RegisterAdmin />} />
         <Route path="*" element={<LoginSuperAdmin />} />
       </Routes>
     </Router>

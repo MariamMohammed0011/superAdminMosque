@@ -8,6 +8,8 @@ import { LuFileText } from "react-icons/lu";
 import { IoCloseCircleOutline } from "react-icons/io5";
 import { IoMdLogOut } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
+import { RiAdminFill } from "react-icons/ri";
+
 export default function GetAllMosques() {
   const [addModal, setAddModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
@@ -19,6 +21,7 @@ export default function GetAllMosques() {
   const [mosqueName, setMosqueName] = useState("");
   const [mosqueAddress, setMosqueAddress] = useState("");
   const [mosqueCode, setMosqueCode] = useState("");
+const [showDrawer, setShowDrawer] = useState(false);
 
   const [newMosqueCode, setNewMosqueCode] = useState("");
   const [addError, setAddError] = useState("");
@@ -41,6 +44,24 @@ export default function GetAllMosques() {
   const [sortField, setSortField] = useState("");
   const [sortOrder, setSortOrder] = useState("asc");
   const [showSortMenu, setShowSortMenu] = useState(false);
+  const [showSortFieldMenu, setShowSortFieldMenu] = useState(false);
+const [showSortOrderMenu, setShowSortOrderMenu] = useState(false);
+
+  const sortFieldLabel = (field) => {
+  switch (field) {
+    case "name":
+      return "اسم الجامع";
+    case "address":
+      return "عنوان الجامع";
+    case "studentNumber":
+      return "عدد الطلاب";
+    case "teacherNumber":
+      return "عدد المعلمين";
+    default:
+      return "";
+  }
+};
+
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -94,7 +115,7 @@ export default function GetAllMosques() {
     return sorted;
   };
 const fetchAdmins=()=>{
-navigate('/admins');
+navigate('/admins')
 }
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -198,32 +219,32 @@ navigate('/admins');
 
   return (
     <div className="shadow-2xl min-h-screen flex-row-reverse flex font-ruqaa bg-[#FBFAF8] ">
-      <aside className="shadow-2xl   rounded-2xl overflow-hidden  mb-4  w-64 min-h-screen bg-[#EBF3EC]   flex flex-col  text-[#2A603F]  hidden md:flex ">
-        <div className="  ">
+      <aside className="shadow-2xl   rounded-2xl overflow-hidden  mb-4  w-64 min-h-screen bg-[#EBF3EC]    flex-col  text-[#2A603F]  hidden md:flex ">
+        <div className="   h-[60%]">
           <img
             src="../../public/mgras.png"
             alt=""
-            className=" translate-y-[-50px] object-cover xl:rounded-tr-2xl xl:rounded-br-2xl "
+            className="  object-cover xl:rounded-tr-2xl xl:rounded-br-2xl   "
           />
         </div>
-        <nav className="flex flex-col gap-7 text-xl text-right mt-[-90px] pr-8 font-ruqaa">
-          <button
+        <nav className="flex flex-col  mt-8 gap-8 text-xl text-right  pr-8 font-ruqaa     ">
+          {/* <button
             onClick={() => fetchMosques()}
             className="flex items-center gap-3 justify-end "
           >
             <span>تصفح كل الجوامع</span> <FaRegListAlt size={23} />
-          </button>
+          </button> */}
           <button
             onClick={() => fetchAdmins()}
-            className="flex items-center gap-3 justify-end "
+            className="flex items-center gap-3 justify-end   "
           >
-            <span>تصفح كل المشرفين</span> <FaRegListAlt size={23} />
+            <span>تصفح كل المشرفين</span> <RiAdminFill size={23} />
           </button>
           <button
             onClick={() => navigate("/registerAdmin")}
             className="flex items-center gap-3 justify-end "
           >
-            <span>انشاء حساب جامع</span> <IoMdAddCircleOutline size={23} />
+            <span>انشاء حساب مشرف</span> <IoMdAddCircleOutline size={23} />
           </button>
           <button
             onClick={handleLogout}
@@ -233,89 +254,179 @@ navigate('/admins');
           </button>
         </nav>
       </aside>
+      {/* Drawer للشاشات الصغيرة */}
+{showDrawer && (
+  <div className="fixed inset-0 bg-black bg-opacity-40 z-40 flex justify-end">
+    <div className="bg-[#EBF3EC] w-64 h-full p-6 flex flex-col text-[#2A603F] relative">
+      <button
+        onClick={() => setShowDrawer(false)}
+        className="absolute left-3 top-3 text-gray-600 hover:text-black"
+      >
+        <IoCloseCircleOutline  size={30}/>
+      </button>
+
+      <nav className="flex flex-col mt-10 gap-8 text-xl text-right pr-4 font-ruqaa">
+        <button
+          onClick={() => {
+            fetchAdmins();
+            setShowDrawer(false);
+          }}
+          className="flex items-center gap-3 justify-end"
+        >
+          <span>تصفح كل المشرفين</span>
+          <RiAdminFill size={23} />
+        </button>
+
+        <button
+          onClick={() => {
+            navigate("/registerAdmin");
+            setShowDrawer(false);
+          }}
+          className="flex items-center gap-3 justify-end"
+        >
+          <span>إنشاء حساب مشرف</span>
+          <IoMdAddCircleOutline size={23} />
+        </button>
+
+        <button
+          onClick={() => {
+            handleLogout();
+            setShowDrawer(false);
+          }}
+          className="flex items-center gap-3 justify-end"
+        >
+          <span>تسجيل خروج</span>
+          <IoMdLogOut size={23} />
+        </button>
+      </nav>
+    </div>
+  </div>
+)}
+
+{/* زر القائمة للشاشات الصغيرة */}
+<button
+  onClick={() => setShowDrawer(true)}
+  className="md:hidden fixed top-4 right-4 z-50 bg-[#2A603F] text-white p-2 rounded-lg shadow-lg"
+>
+ <Menu size={18} />
+</button>
 
       <main className="shadow-2xl flex-1 p-6 flex flex-col gap-6 w-full">
-        <div className="flex justify-between items-center flex-row-reverse">
-          <div>
-            <h2 className="text-2xl font-bold text-right">
-              ولطف الله بعبده باب واسع ...
-            </h2>
-          </div>
-          <div className="flex gap-2 md:gap-4 flex-col md:flex-row">
-            <button
-              className="flex items-center gap-1 border px-3 py-1 rounded-lg shadow"
-              onClick={() => setShowSortMenu(!showSortMenu)}
+       <div className="flex flex-col md:flex-row-reverse md:justify-between md:items-center gap-4 text-right">
+  <h2 className="text-2xl font-bold text-center md:text-right">
+    ولطف الله بعبده باب واسع ...
+  </h2>
+
+
+  <div className="flex flex-col md:flex-row gap-3 items-stretch md:items-center">
+    <button
+      className="flex items-center justify-center gap-1 border px-3 py-2 rounded-lg shadow"
+      onClick={() => setShowSortMenu(!showSortMenu)}
+    >
+      <Menu size={18} />
+      <span>تصنيف حسب</span>
+    </button>
+ {showSortMenu && (
+  <div className="absolute mt-10 w-72 bg-white border rounded-2xl shadow-lg p-4 space-y-4 z-20">
+    <button
+      onClick={() => setShowSortMenu(false)}
+      className="absolute left-2 top-2 text-gray-500 hover:text-gray-700"
+    >
+      <IoCloseCircleOutline 
+      size={30} />
+    </button>
+
+    {/* المجال */}
+    <div className="relative w-full">
+      <label className="flex flex-row-reverse mb-2 font-medium text-[#2A603F]">
+        المجال
+      </label>
+      <button
+        onClick={() => setShowSortFieldMenu((prev) => !prev)}
+        className="w-full text-right p-2 border rounded-2xl bg-white flex justify-between items-center"
+      >
+        {sortField
+          ? sortFieldLabel(sortField)
+          : "اختر المجال"}
+        <span className="text-gray-400">▼</span>
+      </button>
+
+      {showSortFieldMenu && (
+        <ul className="absolute w-full bg-white border rounded-2xl mt-1 max-h-48 overflow-y-auto shadow-lg z-50">
+          {[
+            { value: "name", label: "اسم الجامع" },
+            { value: "address", label: "عنوان الجامع" },
+            { value: "studentNumber", label: "عدد الطلاب" },
+            { value: "teacherNumber", label: "عدد المعلمين" },
+          ].map((option) => (
+            <li
+              key={option.value}
+              onClick={() => {
+                setSortField(option.value);
+                setShowSortFieldMenu(false);
+              }}
+              className="p-2 hover:bg-[#AFD1BC] cursor-pointer text-right text-[#2A603F]"
             >
-              <Menu size={18} />
-              <span>تصنيف حسب</span>
-            </button>
-            {showSortMenu && (
-              <div className="absolute mt-10  w-48 bg-white border rounded shadow-lg p-4 space-y-5 z-20">
-                <button
-                  onClick={() => setShowSortMenu(false)}
-                  className="absolute left-2 top-2 text-gray-500 hover:text-gray-700"
-                >
-                  <IoCloseCircleOutline size={30} />
-                </button>
+              {option.label}
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
 
-                <div>
-                  <label className="flex flex-row-reverse mb-2 font-medium">
-                    المجال
-                  </label>
-                  <select
-                    value={sortField}
-                    onChange={(e) => setSortField(e.target.value)}
-                    className="w-full border rounded p-1 text-right"
-                  >
-                    <option value="">اختر المجال</option>
-                    <option value="name">اسم الجامع</option>
-                    <option value="address">عنوان الجامع</option>
-                    <option value="studentNumber">عدد الطلاب</option>
-                    <option value="teacherNumber">عدد المعلمين</option>
-                  </select>
-                </div>
+    {/* الترتيب */}
+    <div className="relative w-full mt-2">
+      <label className="flex flex-row-reverse mb-2 font-medium text-[#2A603F]">
+        الترتيب
+      </label>
+      <button
+        onClick={() => setShowSortOrderMenu((prev) => !prev)}
+        className="w-full text-right p-2 border rounded-2xl bg-white flex justify-between items-center"
+      >
+        {sortOrder === "asc" ? "تصاعدي" : "تنازلي"}
+        <span className="text-gray-400">▼</span>
+      </button>
 
-                <div>
-                  <label className="mb-1 font-medium flex flex-row-reverse">
-                    الترتيب
-                  </label>
-                  <select
-                    value={sortOrder}
-                    onChange={(e) => setSortOrder(e.target.value)}
-                    className="w-full border rounded p-1 text-right"
-                  >
-                    <option value="asc">تصاعدي</option>
-                    <option value="desc">تنازلي</option>
-                  </select>
-                </div>
+      {showSortOrderMenu && (
+        <ul className="absolute w-full bg-white border rounded-2xl mt-1 max-h-32 overflow-y-auto shadow-lg z-50">
+          {[
+            { value: "asc", label: "تصاعدي" },
+            { value: "desc", label: "تنازلي" },
+          ].map((option) => (
+            <li
+              key={option.value}
+              onClick={() => {
+                setSortOrder(option.value);
+                setShowSortOrderMenu(false);
+              }}
+              className="p-2 hover:bg-[#AFD1BC] cursor-pointer text-right text-[#2A603F]"
+            >
+              {option.label}
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  </div>
+)}
 
-                <button
-                  className="w-full bg-[#2A603F] text-white py-2 rounded hover:bg-[#245138]"
-                  onClick={() => {
-                    setShowSortMenu(false);
-                  }}
-                >
-                  تطبيق
-                </button>
-              </div>
-            )}
+    <div className="relative">
+      <input
+        type="text"
+        placeholder="بحث"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        className="border rounded-full pl-10 pr-4 py-2 shadow focus:outline-[#AFD1BC] w-full"
+      />
+      <Search
+        className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+        size={18}
+      />
+    </div>
+  </div>
+</div>
 
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="بحث"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="border rounded-full pl-10 pr-4 py-1 shadow focus:outline-[#AFD1BC]"
-              />
-
-              <Search
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-                size={18}
-              />
-            </div>
-          </div>
-        </div>
+        
 
         <div className="bg-[#D6E6DB] rounded-xl p-4 shadow flex-1 overflow-x-auto">
           <div className="flex justify-end  items-end mb-6 flex-col text-right gap-3 md:flex-row xl:flex-col">
@@ -338,11 +449,11 @@ navigate('/admins');
             </button>
           </div>
 
-          <div className="hidden md:grid grid-cols-8 bg-[#D6E6DB] text-[#2A603F] font-bold p-2 rounded-lg text-center">
+          <div className="hidden md:grid grid-cols-7 bg-[#D6E6DB] text-[#2A603F] font-bold p-2 rounded-lg text-center">
             <span>الإجراءات</span>
             <span>المعلمين</span>
             <span>الطلاب</span>
-            <span>الملف الشخصي</span>
+            {/* <span>الملف الشخصي</span> */}
             <span>رقم الكود</span>
             <span> العنوان</span>
             <span>اسم الجامع</span>
@@ -352,7 +463,7 @@ navigate('/admins');
           <div className="space-y-2 mt-2">
             {getSortedMosques().map((mosque) => (
               <div key={mosque.id}>
-                <div className="hidden md:grid grid-cols-8 bg-white p-2 rounded-lg text-center shadow hover:bg-gray-100 transition">
+                <div className="hidden md:grid grid-cols-7 bg-white p-2 rounded-lg text-center shadow hover:bg-gray-100 transition">
                   <div className="flex justify-center relative">
                     <button
                       onClick={() =>
@@ -397,7 +508,7 @@ navigate('/admins');
                   <span className="text-md text-[#2A603F]">
                     {mosque.studentNumber}{" "}
                   </span>
-                  <div className="flex flex-col items-center gap-1 w-24 text-center break-words">
+                  {/* <div className="flex flex-col items-center gap-1 w-24 text-center break-words">
                     <button onClick={() => navigate(`/profile/${mosque.id}`)}>
                       <LuFileText
                         className="text-[#2A603F] mx-auto"
@@ -407,7 +518,7 @@ navigate('/admins');
                         الملف الشخصي
                       </span>
                     </button>
-                  </div>
+                  </div> */}
                   <span className="text-md text-[#2A603F] ">
                     {mosque.code}{" "}
                   </span>
@@ -422,7 +533,9 @@ navigate('/admins');
                   </span>
                 </div>
 
-                <div className="md:hidden bg-white p-2 rounded-lg shadow hover:bg-gray-100 transition space-y-2 relative text-sm w-72 mx-auto">
+                {/* <div className="md:hidden bg-white p-2 rounded-lg shadow hover:bg-gray-100 transition space-y-2 relative text-sm w-72 mx-auto"> */}
+                <div className="md:hidden bg-white p-2 rounded-lg shadow hover:bg-gray-100 transition space-y-2 relative text-sm w-full max-w-sm mx-auto">
+
                   <div className="flex flex-col  mb-2">
                     <div className="relative   flex justify-end mb-5 ">
                       <button
@@ -485,13 +598,13 @@ navigate('/admins');
                   </div>
 
                   <div className="flex justify-between items-center mt-2">
-                    <button
+                    {/* <button
                       onClick={() => navigate("/profile")}
                       className="flex items-center gap-1 text-[#2A603F] hover:text-green-700 transition text-xs"
                     >
                       <LuFileText size={16} />
                       <span>الملف الشخصي</span>
-                    </button>
+                    </button> */}
 
                     <AccountCircleOutlinedIcon
                       className="text-[#F8C248]"
@@ -506,7 +619,9 @@ navigate('/admins');
       </main>
       {addModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg shadow-lg p-6 w-80 text-right space-y-4 relative">
+          {/* <div className="bg-white rounded-lg shadow-lg p-6 w-80 text-right space-y-4 relative"> */}
+           <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md text-right space-y-4 relative">
+
             <button
               onClick={() => {
                 setAddModal(false);
@@ -615,4 +730,4 @@ navigate('/admins');
       )}
     </div>
   );
-}
+}  

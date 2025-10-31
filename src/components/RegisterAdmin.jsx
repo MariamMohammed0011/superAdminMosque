@@ -5,18 +5,18 @@ export default function RegisterAdmin() {
   const navigate = useNavigate();
   const [mosques, setMosques] = useState([]);
   const [formData, setFormData] = useState({
-    email: "",
-    password: "",
+    // email: "",
+    // password: "",
     first_name: "",
     last_name: "",
     mosque_id: "",
-    birth_date: "",
-    is_save_quran: false,
+    // birth_date: "",
+    // is_save_quran: false,
     phone: "",
-    experiences: "",
-    address: "",
+    // experiences: "",
+    // address: "",
 
-    memorized_parts: 0,
+    // memorized_parts: 0,
   });
 
   const [message, setMessage] = useState("");
@@ -51,11 +51,11 @@ export default function RegisterAdmin() {
         },
         body: JSON.stringify({
           ...formData,
-          birth_date: formData.birth_date || null,
+          // birth_date: formData.birth_date || null,
           mosque_id: formData.mosque_id ? parseInt(formData.mosque_id) : null,
-          memorized_parts: formData.memorized_parts
-            ? parseInt(formData.memorized_parts)
-            : 0,
+          // memorized_parts: formData.memorized_parts
+          //   ? parseInt(formData.memorized_parts)
+          //   : 0,
         }),
       });
 
@@ -70,18 +70,18 @@ export default function RegisterAdmin() {
 
       setMessage("تم تسجيل الإدمن بنجاح!");
       setFormData({
-        email: "",
-        password: "",
+        // email: "",
+        // password: "",
         first_name: "",
         last_name: "",
         mosque_id: "",
-        birth_date: "",
-        is_save_quran: false,
+        // birth_date: "",
+        // is_save_quran: false,
         phone: "",
-        experiences: "",
-        address: "",
+        // experiences: "",
+        // address: "",
 
-        memorized_parts: 0,
+        // memorized_parts: 0,
       });
     } catch (err) {
       console.error("Error:", err);
@@ -90,8 +90,9 @@ export default function RegisterAdmin() {
   };
 
   return (
-    <section className="min-h-screen flex items-center justify-center font-mono bg-gradient-to-r from-[#AFD1BC] via-[#8FB8A4] to-[#E8F0EF]">
-      <div className="flex shadow-2xl flex-col items-center">
+   <section className="min-h-screen flex items-center justify-center bg-gradient-to-r from-[#AFD1BC] via-[#8FB8A4] to-[#E8F0EF] font-mono px-4 py-6">
+   <div className="flex shadow-2xl flex-col items-center">
+    
         <button
           onClick={() => navigate("/mosques")}
           className="absolute top-2 left-2  text-[#2A603F]  text-2xl"
@@ -101,8 +102,8 @@ export default function RegisterAdmin() {
 
         <div className="flex shadow-2xl">
           <div className="flex flex-col items-center justify-center text-center p-5 gap-4 bg-white rounded-2xl w-[400px]">
-            <h1 className="text-3xl font-bold text-[#2A603F] font-ruqaa pb-2">
-              تسجيل حساب جامع جديد
+            <h1 className="text-3xl font-bold text-[#2A603F] font-zain pb-2">
+              تسجيل حساب  مشرف
             </h1>
 
             <form onSubmit={handleSubmit} className="w-full space-y-4">
@@ -118,13 +119,20 @@ export default function RegisterAdmin() {
                 value={formData.last_name}
                 onChange={handleChange}
               />
-              <InputField
+                <InputField
+                label="رقم الهاتف"
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+              />
+
+              {/* <InputField
                 label="البريد الإلكتروني"
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-              />
-              <InputField
+              /> */}
+              {/* <InputField
                 label="كلمة المرور"
                 name="password"
                 type="password"
@@ -137,9 +145,9 @@ export default function RegisterAdmin() {
                 type="date"
                 value={formData.birth_date}
                 onChange={handleChange}
-              />
+              /> */}
 
-              <div className="flex items-center justify-end gap-2 text-right">
+              {/* <div className="flex items-center justify-end gap-2 text-right">
                 <label
                   htmlFor="is_save_quran"
                   className="text-[#2A603F] font-ruqaa"
@@ -170,7 +178,7 @@ export default function RegisterAdmin() {
                 onChange={handleChange}
               />
               <InputField
-                label=" الخبرات"
+                label=" الدراسة"
                 name="experiences"
                 value={formData.experiences}
                 onChange={handleChange}
@@ -182,7 +190,7 @@ export default function RegisterAdmin() {
                 type="number"
                 value={formData.memorized_parts}
                 onChange={handleChange}
-              />
+              /> */}
 
               <div className="flex flex-col text-right">
                 <label className="text-[#2A603F] font-ruqaa">اختر المسجد</label>
@@ -215,11 +223,11 @@ export default function RegisterAdmin() {
             )}
           </div>
 
-          <div className="w-[350px] h-[400px] overflow-hidden rounded-tr-2xl rounded-br-2xl hidden xl:block">
+          <div className="w-[300px] h-[400px] overflow-hidden rounded-tr-2xl rounded-br-2xl hidden xl:block">
             <img
               src="../../public/mgras.png"
               alt="مسجد"
-              className="w-full h-full object-cover translate-y-[100px]"
+              className="w-full h-full object-cover "
             />
           </div>
         </div>

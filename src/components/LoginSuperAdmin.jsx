@@ -1,21 +1,26 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./LoginSuperAdmin.css";
-
+import { PiQrCodeLight } from "react-icons/pi";
 export default function LoginSuperAdmin() {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-    rememberMe: false,
+    // email: "",
+    // password: "",
+    // rememberMe: false,
+    code_user: "",
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [shakeFields, setShakeFields] = useState({
-    email: false,
-    password: false,
-  });
+  // const [shakeFields, setShakeFields] = useState({
+  //   email: false,
+  //   password: false,
+  // });
+  const [shakeFields, setShakeFields] = useState(
+    false,
+  );
+
 
   useEffect(() => {
     const savedEmail = localStorage.getItem("savedEmail");
@@ -24,43 +29,53 @@ export default function LoginSuperAdmin() {
     }
   }, []);
 
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : value,
-    }));
+  // const handleChange = (e) => {
+  //   const { name, value, type, checked } = e.target;
+  //   setFormData((prev) => ({
+  //     ...prev,
+  //     [name]: type === "checkbox" ? checked : value,
+  //   }));
+  // };
+const handleChange = (e) => {
+    setFormData({ code_user: e.target.value });
   };
+  // const validateForm = () => {
+  //   let valid = true;
+  //   const newShake = { email: false, password: false };
 
-  const validateForm = () => {
-    let valid = true;
-    const newShake = { email: false, password: false };
+  //   if (!formData.email.trim()) {
+  //     newShake.email = true;
+  //     valid = false;
+  //   }
+  //   if (!formData.password.trim()) {
+  //     newShake.password = true;
+  //     valid = false;
+  //   }
 
-    if (!formData.email.trim()) {
-      newShake.email = true;
-      valid = false;
+  //   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  //   if (formData.email && !emailRegex.test(formData.email)) {
+  //     newShake.email = true;
+  //     valid = false;
+  //   }
+
+  //   setShakeFields(newShake);
+
+  //   if (!valid) {
+  //     setTimeout(() => setShakeFields({ email: false, password: false }), 500);
+  //     setError("يرجى التأكد من البيانات المدخلة");
+  //   }
+
+  //   return valid;
+  // };
+ const validateForm = () => {
+    if (!formData.code_user.trim()) {
+      setShake(true);
+      setError("يرجى إدخال كود المستخدم");
+      setTimeout(() => setShake(false), 500);
+      return false;
     }
-    if (!formData.password.trim()) {
-      newShake.password = true;
-      valid = false;
-    }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (formData.email && !emailRegex.test(formData.email)) {
-      newShake.email = true;
-      valid = false;
-    }
-
-    setShakeFields(newShake);
-
-    if (!valid) {
-      setTimeout(() => setShakeFields({ email: false, password: false }), 500);
-      setError("يرجى التأكد من البيانات المدخلة");
-    }
-
-    return valid;
+    return true;
   };
-
   const handleLogin = async () => {
     setError("");
     if (!validateForm()) return;
@@ -71,8 +86,9 @@ export default function LoginSuperAdmin() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          email: formData.email,
-          password: formData.password,
+          // email: formData.email,
+          // password: formData.password,
+           code_user: formData.code_user,
         }),
       });
 
@@ -82,13 +98,14 @@ export default function LoginSuperAdmin() {
       }
 
       const data = await response.json();
+      console.log(response);
       localStorage.setItem("token", data.token);
 
-      if (formData.rememberMe) {
-        localStorage.setItem("savedEmail", formData.email);
-      } else {
-        localStorage.removeItem("savedEmail");
-      }
+      // if (formData.rememberMe) {
+      //   localStorage.setItem("savedEmail", formData.email);
+      // } else {
+      //   localStorage.removeItem("savedEmail");
+      // }
 
       navigate("/mosques");
     } catch (err) {
@@ -100,23 +117,51 @@ export default function LoginSuperAdmin() {
 
   return (
     <section className="min-h-screen flex items-center justify-center font-mono bg-gradient-to-r from-[#AFD1BC] via-[#8FB8A4] to-[#E8F0EF]">
-      <div className="flex shadow-2xl">
-        <div className="flex flex-col items-center justify-center text-center p-20 gap-8 bg-white rounded-2xl xl:rounded-tr-none xl:rounded-br-none">
-          <h1 className="text-5xl font-bold text-[#2A603F] font-ruqaa pb-[50px]">
+      {/* <div className="flex shadow-2xl"> */}
+      <div className="flex flex-col xl:flex-row shadow-2xl w-full max-w-4xl mx-auto">
+
+        {/* <div className="flex flex-col items-center justify-center text-center p-20 gap-8 bg-white rounded-2xl xl:rounded-tr-none xl:rounded-br-none"> */}
+         <div className="flex flex-col items-center justify-center text-center p-6 sm:p-10 lg:p-20 gap-8 bg-white rounded-2xl xl:rounded-tr-none xl:rounded-br-none w-full">
+
+          <h1 className="text-4xl sm:text-4xl lg:text-5xl font-bold text-[#2A603F] font-ruqaa pb-[50px]">
             أهلاً وسهلاً بكم
           </h1>
+<div className="flex flex-col text-2xl text-right gap-1 font-ruqaa">
+ <div className="flex items-center justify-end  gap-2  p-2 rounded-md ">
+   <span className="text-[#2A603F] text-xl font-ruqaa">
+    يرجى إدخال كود المستخدم
+  </span>
+  <PiQrCodeLight className="text-[#2A603F] text-3xl" />
+ 
+</div>
 
-          <div className="flex flex-col text-2xl text-right gap-1 font-ruqaa">
+   <input
+              type="text"
+              name="code_user"
+              value={formData.code_user}
+              onChange={handleChange}
+              className={`w-full rounded-md p-2 border-2 outline-none focus:border-[#AFD1BC] focus:bg-[#EBF3EC] ${
+                shakeFields ? "shake" : ""
+              }`}
+            />
+          </div>
+
+         
+
+
+          {/* <div className="flex flex-col text-2xl text-right gap-1 font-ruqaa">
             <span className="text-[#2A603F]">يرجى إدخال البريد الإلكتروني</span>
             <input
               type="text"
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className={`rounded-md p-1 border-2 outline-none focus:border-[#AFD1BC] focus:bg-[#EBF3EC] ${
-                shakeFields.email ? "shake" : ""
-              }`}
+              className={`w-full rounded-md p-2 border-2 outline-none focus:border-[#AFD1BC] focus:bg-[#EBF3EC] ${
+    shakeFields.email ? "shake" : ""
+  }`}
             />
+           
+
           </div>
 
           <div className="flex flex-col text-2xl text-right gap-1 font-ruqaa">
@@ -143,7 +188,7 @@ export default function LoginSuperAdmin() {
                 تذكر البريد الإلكتروني
               </span>
             </div>
-          </div>
+          </div> */}
 
           {error && <div className="text-red-500">{error}</div>}
 
@@ -159,7 +204,7 @@ export default function LoginSuperAdmin() {
         <img
           src="../../public/mgras.png"
           alt=""
-          className="w-[350px] object-cover xl:rounded-tr-2xl xl:rounded-br-2xl xl:block hidden"
+          className="w-full max-w-[350px] object-cover xl:rounded-tr-2xl xl:rounded-br-2xl xl:block hidden"
         />
       </div>
     </section>
