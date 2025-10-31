@@ -318,7 +318,7 @@ navigate('/admins')
   </h2>
 
 
-  <div className="flex flex-col md:flex-row gap-3 items-stretch md:items-center">
+  <div className="flex flex-col md:flex-row gap-3 items-stretch md:items-center ">
     <button
       className="flex items-center justify-center gap-1 border px-3 py-2 rounded-lg shadow"
       onClick={() => setShowSortMenu(!showSortMenu)}
@@ -327,7 +327,7 @@ navigate('/admins')
       <span>تصنيف حسب</span>
     </button>
  {showSortMenu && (
-  <div className="absolute mt-10 w-72 bg-white border rounded-2xl shadow-lg p-4 space-y-4 z-20">
+  <div className="absolute mt-11 w-72  bg-white border rounded-2xl shadow-lg p-4 space-y-4 z-20 md:top-0 md:left-0 md:translate-y-8 md:translate-x-3 ">
     <button
       onClick={() => setShowSortMenu(false)}
       className="absolute left-2 top-2 text-gray-500 hover:text-gray-700"
@@ -549,7 +549,7 @@ navigate('/admins')
                       </button>
 
                       {showMenuIndex === mosque.id && (
-                        <div className="absolute left-0 top-7 bg-white border rounded shadow z-10 w-24 text-center flex flex-col">
+                        <div className="absolute  left-0 top-7 bg-white border rounded shadow z-10 w-24 text-center flex flex-col">
                           <button
                             className="hover:bg-gray-100 p-1 text-xs"
                             onClick={() => {
