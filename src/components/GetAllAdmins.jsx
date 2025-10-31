@@ -34,7 +34,7 @@ console.log(token);
       setAdmins(Array.isArray(data) ? data : []);
     } catch (err) {
       console.error(err);
-      alert("خطأ أثناء جلب الإدمنات");
+      // alert("خطأ أثناء جلب الإدمنات");
     }
   };
 
@@ -57,7 +57,7 @@ console.log(token);
       setMosques(Array.isArray(data) ? data : []);
     } catch (err) {
       console.error(err);
-      alert("خطأ أثناء جلب الجوامع");
+      // alert("خطأ أثناء جلب الجوامع");
     }
   };
 
