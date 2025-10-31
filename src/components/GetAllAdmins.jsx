@@ -88,10 +88,10 @@ console.log(token);
       if (!response.ok) throw new Error("فشل في حذف الإدمن");
 
       setAdmins((prev) => prev.filter((admin) => admin.id !== id));
-      alert("تم حذف الإدمن بنجاح");
+      // alert("تم حذف الإدمن بنجاح");
     } catch (err) {
       console.error(err);
-      alert("حدث خطأ أثناء الحذف");
+      // alert("حدث خطأ أثناء الحذف");
     }
   };
 
